@@ -1,7 +1,7 @@
 import http from 'http';
 import SocketIo from 'socket.io'
 import express from  "express"
-
+import cors from 'cors';
 const app = express();
 
 app.set("view engine","pug");
@@ -10,10 +10,15 @@ app.use("/public",express.static(__dirname+"/public"));
 
 app.get("/",(req,res) => { res.render("home") });
 app.get("/*",(req,res) => { res.redirect("/") } )
-
+app.use(cors());
 
 const httpServer = http.createServer(app);
-const wsServer = SocketIo(httpServer);
+const wsServer = SocketIo(httpServer,{
+    cors: {
+      origin: "*",
+      methods: ["GET", "POST"]
+    }
+  });
 
 wsServer.on("connection", (socket) => {
 
@@ -44,7 +49,8 @@ wsServer.on("connection", (socket) => {
 
   /* 최초 입장시 */
   socket.on("welcome", () => {
-    const roomList = getRoomList(); 
+    const roomList = getRoomList();
+    console.log(socket)
     socket.emit('get_room_list',roomList); // 방리스트를 보내준다.
   })
 
