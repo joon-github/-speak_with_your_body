@@ -1,11 +1,11 @@
-import http from 'http';
-import { Server as SocketIOServer, Socket } from 'socket.io';
 import express, { Express, Request, Response } from 'express';
+import { Server as SocketIOServer, Socket } from 'socket.io';
 import cors from 'cors';
-import bodyParser from 'body-parser';
 
 const app: Express = express();
+const http = require('http');
 const server = http.createServer(app);
+const bodyParser = require('body-parser');
 
 const wsServer: SocketIOServer = require('socket.io')(server, {
   cors: {
@@ -22,8 +22,8 @@ app.set("view engine", "pug");
 app.set("views", __dirname + "/views");
 app.use("/public", express.static(__dirname + "/public"));
 
-app.get("/", (req: Request, res: Response) => { res.render("home") });
-app.get("/*", (req: Request, res: Response) => { res.redirect("/") })
+// app.get("/", (req: Request, res: Response) => { res.render("home") });
+// app.get("/*", (req: Request, res: Response) => { res.redirect("/") })
 app.use(cors());
 
 const httpServer = http.createServer(app);
@@ -99,5 +99,4 @@ wsServer.on("connection", (socket: Socket) => {
 
 
 })
-
-httpServer.listen(8000, () => console.log("hello world"))
+httpServer.listen(8000, () => console.log("hi"));
