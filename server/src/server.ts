@@ -5,29 +5,23 @@ import cors from 'cors';
 const app: Express = express();
 const http = require('http');
 const server = http.createServer(app);
+
 const bodyParser = require('body-parser');
-
-const wsServer: SocketIOServer = require('socket.io')(server, {
-  cors: {
-    origin: '*',
-    methods: ['GET', 'POST']
-  }
-});
-
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
-app.set("view engine", "pug");
-app.set("views", __dirname + "/views");
-app.use("/public", express.static(__dirname + "/public"));
-
-// app.get("/", (req: Request, res: Response) => { res.render("home") });
-// app.get("/*", (req: Request, res: Response) => { res.redirect("/") })
 app.use(cors());
 
-const httpServer = http.createServer(app);
+const indexRouter = require('../src/routes/index');
+app.use('/test', indexRouter);
 
+
+/* 웹소켓 관련 코드 */
+const wsServer: SocketIOServer = require('socket.io')(server, {
+  cors: {
+    origin: '*' // Adjust this for production
+  }
+});
 
 wsServer.on("connection", (socket: Socket) => {
 
@@ -99,4 +93,4 @@ wsServer.on("connection", (socket: Socket) => {
 
 
 })
-httpServer.listen(8000, () => console.log("hi"));
+server.listen(8000, () => console.log("hi"));
