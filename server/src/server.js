@@ -14,25 +14,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
+const http_1 = __importDefault(require("http"));
+const body_parser_1 = __importDefault(require("body-parser"));
+const port = 8000;
 const app = (0, express_1.default)();
-const http = require('http');
-const server = http.createServer(app);
-const bodyParser = require('body-parser');
+const server = http_1.default.createServer(app);
+const indexRouter = require('./routes');
+app.use(body_parser_1.default.urlencoded({ extended: true }));
+app.use(body_parser_1.default.json());
+app.use((0, cors_1.default)());
+app.use('/test', indexRouter);
+// /test/{id}
+// app.get('/test/:id', (req: Request, res: Response) => {
+//   console.log(req.params);
+//   console.log(req.query);
+//   res.send('indexsdsdsdff');
+// })
+/* 웹소켓 관련 코드 */
 const wsServer = require('socket.io')(server, {
     cors: {
-        origin: '*',
-        methods: ['GET', 'POST']
+        origin: '*' // Adjust this for production
     }
 });
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.set("view engine", "pug");
-app.set("views", __dirname + "/views");
-app.use("/public", express_1.default.static(__dirname + "../src/public"));
-app.get("/", (req, res) => { res.render("/Users/pyeonbeomjun/Desktop/pbj/-speak_with_your_body/server/src/views/home"); });
-app.get("/*", (req, res) => { res.redirect("/"); });
-app.use((0, cors_1.default)());
-const httpServer = http.createServer(app);
 wsServer.on("connection", (socket) => {
     // 방리스트 조회 함수
     function getRoomList() {
@@ -91,4 +94,4 @@ wsServer.on("connection", (socket) => {
         });
     });
 });
-httpServer.listen(8000, () => console.log("hi"));
+server.listen(port, () => console.log("hi23sssassdfdf"));

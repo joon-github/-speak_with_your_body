@@ -1,19 +1,26 @@
 import express, { Express, Request, Response } from 'express';
 import { Server as SocketIOServer, Socket } from 'socket.io';
 import cors from 'cors';
+import http from 'http';
+import bodyParser from 'body-parser';
+const port = 8000;
 
 const app: Express = express();
-const http = require('http');
 const server = http.createServer(app);
 
-const bodyParser = require('body-parser');
+const indexRouter = require('./routes');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
 
-const indexRouter = require('../src/routes/index');
 app.use('/test', indexRouter);
+// /test/{id}
+// app.get('/test/:id', (req: Request, res: Response) => {
+//   console.log(req.params);
+//   console.log(req.query);
+//   res.send('indexsdsdsdff');
+// })
 
 
 /* 웹소켓 관련 코드 */
@@ -93,4 +100,4 @@ wsServer.on("connection", (socket: Socket) => {
 
 
 })
-server.listen(8000, () => console.log("hi"));
+server.listen(port, () => console.log("hi23sssassdfdf"));
