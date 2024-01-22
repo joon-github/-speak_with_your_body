@@ -3,25 +3,52 @@ import { Server as SocketIOServer, Socket } from 'socket.io';
 import cors from 'cors';
 import http from 'http';
 import bodyParser from 'body-parser';
-const port = 8000;
+const { body } = require("express-validator");
+// const indexRouter = require('./routes');
 
 const app: Express = express();
 const server = http.createServer(app);
+const port = 8000;
 
-const indexRouter = require('./routes');
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true,
+}));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cors());
+// app.use('/test', indexRouter);
 
-app.use('/test', indexRouter);
-// /test/{id}
-// app.get('/test/:id', (req: Request, res: Response) => {
-//   console.log(req.params);
-//   console.log(req.query);
-//   res.send('indexsdsdsdff');
-// })
+app.get('/test/:id',
 
+  (req: Request, res: Response) => {
+  //params type check
+  const { id: string } = req.params;
+  console.log(string);
+
+  console.log(req.params);
+  console.log(req.query);
+  res.send('indexsdsdsdff');
+})
+
+//타입 체크 함수
+
+interface CreateUserRequestBody {
+  username: string;
+  email: string;
+  password: number;
+}
+
+app.post('/test',
+  [
+    body("username").isString(),
+    body("email").isString(),
+    body("password").isLength({ min: 1 }),
+  ],
+  (req: Request, res: Response) => {
+  const { username, email, password } = req.body as CreateUserRequestBody;
+  res.send('indexsdsdsdff');
+})
 
 /* 웹소켓 관련 코드 */
 const wsServer: SocketIOServer = require('socket.io')(server, {

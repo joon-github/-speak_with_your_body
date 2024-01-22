@@ -3,10 +3,10 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import io from 'socket.io-client';
 import MainLayout from './components/layout/MainLayout';
 function App() {
-  const socket = io("http://localhost:8000");
+  const socket = io('http://localhost:8000');
 
   useEffect(() => {
-    socket.emit("welcome");
+    socket.emit('welcome');
   }, []);
 
   return (

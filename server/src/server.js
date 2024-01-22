@@ -16,20 +16,34 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const http_1 = __importDefault(require("http"));
 const body_parser_1 = __importDefault(require("body-parser"));
-const port = 8000;
+const { body } = require("express-validator");
+// const indexRouter = require('./routes');
 const app = (0, express_1.default)();
 const server = http_1.default.createServer(app);
-const indexRouter = require('./routes');
+const port = 8000;
+app.use((0, cors_1.default)({
+    origin: 'http://localhost:3000',
+    credentials: true,
+}));
 app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.use(body_parser_1.default.json());
-app.use((0, cors_1.default)());
-app.use('/test', indexRouter);
-// /test/{id}
-// app.get('/test/:id', (req: Request, res: Response) => {
-//   console.log(req.params);
-//   console.log(req.query);
-//   res.send('indexsdsdsdff');
-// })
+// app.use('/test', indexRouter);
+app.get('/test/:id', (req, res) => {
+    //params type check
+    const { id: string } = req.params;
+    console.log(string);
+    console.log(req.params);
+    console.log(req.query);
+    res.send('indexsdsdsdff');
+});
+app.post('/test', [
+    body("username").isString(),
+    body("email").isString(),
+    body("password").isLength({ min: 1 }),
+], (req, res) => {
+    const { username, email, password } = req.body;
+    res.send('indexsdsdsdff');
+});
 /* 웹소켓 관련 코드 */
 const wsServer = require('socket.io')(server, {
     cors: {

@@ -1,13 +1,13 @@
-import { Outlet } from "react-router-dom";
-import { Button } from "antd";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { Outlet } from 'react-router-dom';
+import { Button } from 'antd';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 
 const MainLayout = () => {
-  const [test, setTest] = useState("test");
+  const [test, setTest] = useState('test');
   useEffect(() => {
-    if (test === "test") {
-      setTest("test2");
+    if (test === 'test') {
+      setTest('test2');
     }
   }, [test]);
   return (
@@ -16,7 +16,11 @@ const MainLayout = () => {
       <Button
         onClick={() => {
           try {
-            axios.get("http://localhost:8000/test");
+            axios.post('/test', {
+              username: 'test',
+              email: 'test',
+              password: '123',
+            });
           } catch (e) {
             console.log(e);
           }
@@ -25,7 +29,7 @@ const MainLayout = () => {
       <main>
         <Outlet
           context={{
-            test: "test",
+            test: 'test',
           }}
         />
       </main>
