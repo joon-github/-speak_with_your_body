@@ -16,39 +16,40 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const http_1 = __importDefault(require("http"));
 const body_parser_1 = __importDefault(require("body-parser"));
+const login_1 = __importDefault(require("./controllers/login"));
 const { body } = require("express-validator");
 // const indexRouter = require('./routes');
 const app = (0, express_1.default)();
 const server = http_1.default.createServer(app);
 const port = 8000;
 app.use((0, cors_1.default)({
-    origin: 'http://localhost:3000',
+    origin: "http://localhost:3000",
     credentials: true,
 }));
 app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.use(body_parser_1.default.json());
-// app.use('/test', indexRouter);
-app.get('/test/:id', (req, res) => {
+app.use("/login", login_1.default);
+app.get("/test/:id", (req, res) => {
     //params type check
     const { id: string } = req.params;
     console.log(string);
     console.log(req.params);
     console.log(req.query);
-    res.send('indexsdsdsdff');
+    res.send("indexsdsdsdff");
 });
-app.post('/test', [
+app.post("/test", [
     body("username").isString(),
     body("email").isString(),
     body("password").isLength({ min: 1 }),
 ], (req, res) => {
     const { username, email, password } = req.body;
-    res.send('indexsdsdsdff');
+    res.send("indexsdsdsdff");
 });
 /* 웹소켓 관련 코드 */
-const wsServer = require('socket.io')(server, {
+const wsServer = require("socket.io")(server, {
     cors: {
-        origin: '*' // Adjust this for production
-    }
+        origin: "*", // Adjust this for production
+    },
 });
 wsServer.on("connection", (socket) => {
     // 방리스트 조회 함수
@@ -61,14 +62,16 @@ wsServer.on("connection", (socket) => {
     // 방리스트 보내기
     function sendRoomList() {
         const roomList = getRoomList();
-        wsServer.emit('get_room_list', roomList); // 방리스트를 보내준다.
+        wsServer.emit("get_room_list", roomList); // 방리스트를 보내준다.
     }
     //방 인원수 조회
     function countRoom(roomName, isDisconnecting) {
         const room = wsServer.sockets.adapter.rooms.get(roomName);
         if (room) {
             const count = room.size;
-            wsServer.to(roomName).emit('count_room', isDisconnecting ? count - 1 : count);
+            wsServer
+                .to(roomName)
+                .emit("count_room", isDisconnecting ? count - 1 : count);
         }
         else {
             console.log(`Room ${roomName} doesn't exist.`);
@@ -81,13 +84,14 @@ wsServer.on("connection", (socket) => {
     socket.on("welcome", () => {
         const roomList = getRoomList();
         console.log(socket);
-        socket.emit('get_room_list', roomList); // 방리스트를 보내준다.
+        socket.emit("get_room_list", roomList); // 방리스트를 보내준다.
     });
     /* 방 입장시 */
     socket.on("enter_room", (roomName, callback) => __awaiter(void 0, void 0, void 0, function* () {
         const roomList = getRoomList(); // 방리스트
         yield socket.join(roomName); // 방에 입장 및 생성
-        if (!roomList.includes(roomName)) { // 새로운 방이 생성되면
+        if (!roomList.includes(roomName)) {
+            // 새로운 방이 생성되면
             sendRoomList();
         }
         countRoom(roomName, false);
@@ -103,7 +107,7 @@ wsServer.on("connection", (socket) => {
     });
     /* 서버 퇴장시 */
     socket.on("disconnecting", (reason) => {
-        socket.rooms.forEach(room => {
+        socket.rooms.forEach((room) => {
             socket.to(room).emit("bye", countRoom(room, true));
         });
     });
