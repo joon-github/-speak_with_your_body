@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 // import io from 'socket.io-client';
 import MainLayout from './components/layout/MainLayout';
 
@@ -19,6 +19,7 @@ function App() {
             <Route path="/" element={<div>home22</div>} />
             <Route path="/login" element={<LoginPage />} />
           </Route>
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Suspense>
     </BrowserRouter>

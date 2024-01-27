@@ -13,9 +13,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const cors_1 = __importDefault(require("cors"));
 const http_1 = __importDefault(require("http"));
+//미들웨어
 const body_parser_1 = __importDefault(require("body-parser"));
+const cors_1 = __importDefault(require("cors"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
+//router
 const login_1 = __importDefault(require("./api/login"));
 const signUp_1 = __importDefault(require("./api/signUp"));
 const verifyToken_1 = __importDefault(require("./middlewhere/verifyToken"));
@@ -23,16 +26,26 @@ const { body } = require("express-validator");
 const app = (0, express_1.default)();
 const server = http_1.default.createServer(app);
 const port = 8000;
+// 미들웨어 적용
 app.use((0, cors_1.default)({
     origin: "http://localhost:3000",
     credentials: true,
 }));
 app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.use(body_parser_1.default.json());
+app.use((0, cookie_parser_1.default)());
+//Router
 app.use("/login", login_1.default);
 app.use("/sign_up", signUp_1.default);
 // 토큰 체크 미들웨어 적용
 app.use(verifyToken_1.default);
+app.use("/test", (req, res) => {
+    console.log("ㅁ", req.user);
+    // res.status(200).json({
+    //   result: "success",
+    //   message: "로그인에 성공했습니다.",
+    // });
+});
 app.get("/test/:id", (req, res) => {
     //params type check
     const { id: string } = req.params;

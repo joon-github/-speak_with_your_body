@@ -2,8 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
 const verifyToken = (req: Request, res: Response, next: NextFunction) => {
-  const token = req.headers["authorization"];
-
+  const token = req.cookies["authorization"];
   if (!token) {
     return res.status(403).send("A token is required for authentication");
   }
@@ -15,11 +14,10 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
       process.env.JWT_SECRET as string
     ) as JwtPayload;
     req.user = decoded; // Express의 Request 타입을 확장해야 할 수도 있습니다.
+    next();
   } catch (err) {
     return res.status(401).send("Invalid Token or Token has expired");
   }
-
-  return next();
 };
 
 export default verifyToken;
