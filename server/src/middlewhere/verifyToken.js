@@ -7,7 +7,9 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const verifyToken = (req, res, next) => {
     const token = req.cookies["authorization"];
     if (!token) {
-        return res.status(403).send("A token is required for authentication");
+        return res
+            .status(403)
+            .send({ status: 403, message: "인증에 실패했습니다." });
     }
     try {
         // 타입 단언을 사용하여 디코딩된 페이로드의 타입을 JwtPayload로 지정
@@ -16,7 +18,10 @@ const verifyToken = (req, res, next) => {
         next();
     }
     catch (err) {
-        return res.status(401).send("Invalid Token or Token has expired");
+        return res.status(401).send({
+            status: 401,
+            message: "잘못된 토큰 또는 토큰이 만료되었습니다.",
+        });
     }
 };
 exports.default = verifyToken;

@@ -18,7 +18,7 @@ const LoginPage = () => {
 
   const test = async () => {
     try {
-      const res = await axios.get('/test');
+      const res = await axios.get('/user_check');
       console.log(res);
     } catch (e) {
       if (axios.isAxiosError(e)) {

@@ -39,12 +39,17 @@ app.use("/login", login_1.default);
 app.use("/sign_up", signUp_1.default);
 // 토큰 체크 미들웨어 적용
 app.use(verifyToken_1.default);
-app.use("/test", (req, res) => {
-    console.log("ㅁ", req.user);
-    // res.status(200).json({
-    //   result: "success",
-    //   message: "로그인에 성공했습니다.",
-    // });
+app.get("/user_check", (req, res) => {
+    try {
+        res.status(200).json({
+            result: "success",
+            message: "정상적인 로그인 상태 입니다.",
+            data: req.user,
+        });
+    }
+    catch (e) {
+        console.log(e);
+    }
 });
 app.get("/test/:id", (req, res) => {
     //params type check

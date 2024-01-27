@@ -36,12 +36,16 @@ app.use("/sign_up", signUpRouter);
 // 토큰 체크 미들웨어 적용
 app.use(verifyToken);
 
-app.use("/test", (req: Request, res: Response) => {
-  console.log("ㅁ", req.user);
-  // res.status(200).json({
-  //   result: "success",
-  //   message: "로그인에 성공했습니다.",
-  // });
+app.get("/user_check", (req: Request, res: Response) => {
+  try {
+    res.status(200).json({
+      result: "success",
+      message: "정상적인 로그인 상태 입니다.",
+      data: req.user,
+    });
+  } catch (e) {
+    console.log(e);
+  }
 });
 
 app.get(
