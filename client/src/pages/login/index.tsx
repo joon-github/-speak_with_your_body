@@ -1,16 +1,18 @@
-import { Button, Card, Flex, Form, Input } from 'antd';
+import { Button, Card, Flex, Form, Input, message } from 'antd';
 import axios from 'axios';
 import styled from 'styled-components';
 const LoginPage = () => {
   const login = async () => {
     try {
-      const { id, pw } = form.getFieldsValue();
-      const res = await axios.post('/login', { id, pw });
+      const { id, password } = form.getFieldsValue();
+      const res = await axios.post('/login', { id, password });
       console.log(res);
     } catch (e) {
-      console.log(e);
+      if (axios.isAxiosError(e)) {
+        const result = e?.response?.data.message;
+        message.error(result);
+      }
     }
-    console.log('test', form);
   };
   const [form] = Form.useForm();
   return (
@@ -21,7 +23,7 @@ const LoginPage = () => {
           <Form.Item name="id" required>
             <Input placeholder="아이디" />
           </Form.Item>
-          <Form.Item name="pw" required>
+          <Form.Item name="password" required>
             <Input.Password visibilityToggle={false} placeholder="비밀번호" />
           </Form.Item>
         </FormStyle>

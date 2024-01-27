@@ -3,10 +3,11 @@ import { Server as SocketIOServer, Socket } from "socket.io";
 import cors from "cors";
 import http from "http";
 import bodyParser from "body-parser";
-import loginRouter from "./controllers/login";
+import loginRouter from "./api/login";
+import signUpRouter from "./api/signUp";
+import verifyToken from "./middlewhere/verifyToken";
 
 const { body } = require("express-validator");
-// const indexRouter = require('./routes');
 
 const app: Express = express();
 const server = http.createServer(app);
@@ -23,6 +24,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use("/login", loginRouter);
+app.use("/sign_up", signUpRouter);
+
+// 토큰 체크 미들웨어 적용
+app.use(verifyToken);
 
 app.get(
   "/test/:id",
