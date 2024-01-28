@@ -46,9 +46,7 @@ router.post("/", (0, validateRequest_1.default)(LoginRequest), (req, res) => __a
         // 사용자 정보 조회
         const user = yield (0, service_1.findUserById)(id);
         if (!user) {
-            return res
-                .status(401)
-                .json({
+            return res.status(401).json({
                 result: "error",
                 message: "아이디 또는 비밀번호가 틀렸습니다.",
             });
@@ -56,8 +54,13 @@ router.post("/", (0, validateRequest_1.default)(LoginRequest), (req, res) => __a
         // 비밀번호 비교
         const validPassword = yield (0, service_1.validatePassword)(password, user.password);
         if (validPassword) {
-            const token = (0, service_1.generateToken)({ user_id: user.user_id });
+            const token = (0, service_1.generateToken)({ user_id: user.user_id }, process.env.JWT_SECRET, "5s");
+            const newRefreshToken = (0, service_1.generateToken)({ user_id: user.user_id }, process.env.REFRESH_TOKEN_SECRET, "10s");
             res.cookie("authorization", token, { httpOnly: true });
+            res.cookie("refreshToken", newRefreshToken, {
+                httpOnly: true,
+                sameSite: "strict",
+            });
             res.status(200).json({
                 result: "success",
                 message: "로그인에 성공했습니다.",

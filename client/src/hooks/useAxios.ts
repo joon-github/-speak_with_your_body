@@ -28,16 +28,21 @@ const useAxios = async <T>({
         ? {}
         : { data: body }),
     };
-
     const response = await axios(config);
     return response.data;
-  } catch (e) {
-    console.log('e', e);
-    if (axios.isAxiosError(e)) {
-      const result = e?.response?.data.message || 'An error occurred';
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log(error);
+      // if (
+      //   error.response?.status &&
+      //   [401, 403].includes(error.response.status)
+      // ) {
+      //   window.location.href = '/login';
+      // }
+      const result = error?.response?.data.message || 'An error occurred';
       message.error(result);
     }
-    throw e;
+    throw error;
   }
 };
 

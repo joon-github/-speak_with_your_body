@@ -1,5 +1,5 @@
 import { useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { Button, Card, Flex, Form, FormInstance, Input } from 'antd';
 
@@ -10,7 +10,7 @@ import useAxios, { Method } from '../../hooks/useAxios';
 
 const LoginPage = () => {
   const [signupModalOpen, setsSignupModalOpen] = useState(false);
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const login = async (formData: FormInstance) => {
     const { id, password } = formData.getFieldsValue();
     try {
@@ -19,6 +19,7 @@ const LoginPage = () => {
         url: '/login',
         body: { id, password },
       });
+      navigate('/');
     } catch (e) {
       console.error(e);
     }

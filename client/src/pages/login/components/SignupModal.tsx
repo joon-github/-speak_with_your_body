@@ -1,6 +1,6 @@
 import React from 'react';
-import { Form, FormInstance, Input, Modal, message } from 'antd';
-import axios from 'axios';
+import { Form, FormInstance, Input, Modal } from 'antd';
+import useAxios, { Method } from '../../../hooks/useAxios';
 
 type PropsTyeps = {
   open: boolean;
@@ -18,13 +18,14 @@ const SignupModal = ({ open, setOpen, login }: PropsTyeps) => {
   const onSubmitSignUp = async () => {
     try {
       const { id, name, password } = await form.validateFields();
-      await axios.post('/sign_up', { id, name, password });
+      await useAxios({
+        method: Method.POST,
+        url: '/sign_up',
+        body: { id, name, password },
+      });
       login(form);
     } catch (e) {
-      if (axios.isAxiosError(e)) {
-        const result = e?.response?.data.message;
-        message.error(result);
-      }
+      console.error(e);
     }
   };
 

@@ -13,6 +13,12 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     height: 100vh;
   }
+  .ant-modal-header{
+    margin-bottom: 15px !important;
+  }
+  .ant-modal-title{
+    text-align: center;
+  }
 `;
 
 export default GlobalStyle;

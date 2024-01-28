@@ -38,9 +38,9 @@ const validatePassword = (password, hash) => __awaiter(void 0, void 0, void 0, f
 });
 exports.validatePassword = validatePassword;
 //토큰 생성
-const generateToken = (payload) => {
-    if (!process.env.JWT_SECRET)
+const generateToken = (payload, secret, expiresIn) => {
+    if (!secret)
         throw new Error("JWT_SECRET is not defined");
-    return jsonwebtoken_1.default.sign(payload, process.env.JWT_SECRET, { expiresIn: "1h" });
+    return jsonwebtoken_1.default.sign(payload, secret, { expiresIn });
 };
 exports.generateToken = generateToken;

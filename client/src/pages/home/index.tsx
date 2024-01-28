@@ -1,19 +1,14 @@
 import { useEffect } from 'react';
-
+import useLoginCheck from '../../hooks/useLoginCheck';
+import io from 'socket.io-client';
 const HomePage = () => {
+  const socket = io('http://localhost:8000');
+
   useEffect(() => {
-    console.log('');
-    // try {
-    //   const res = await axios.get('/user_check');
-    //   console.log(res);
-    // } catch (e) {
-    //   if (axios.isAxiosError(e)) {
-    //     const result = e?.response?.data.message;
-    //     message.error(result);
-    //   }
-    // }
+    socket.emit('welcome');
   }, []);
-  return <div></div>;
+  useLoginCheck();
+  return <div>test</div>;
 };
 
 export default HomePage;

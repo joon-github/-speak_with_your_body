@@ -36,9 +36,13 @@ const validatePassword = async (password: string, hash: string) => {
 };
 
 //토큰 생성
-const generateToken = (payload: Payload) => {
-  if (!process.env.JWT_SECRET) throw new Error("JWT_SECRET is not defined");
-  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1h" });
+const generateToken = (
+  payload: Payload,
+  secret: string | undefined,
+  expiresIn: string
+) => {
+  if (!secret) throw new Error("JWT_SECRET is not defined");
+  return jwt.sign(payload, secret, { expiresIn });
 };
 
 export { findUserById, validatePassword, generateToken };
