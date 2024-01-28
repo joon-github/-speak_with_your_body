@@ -27,7 +27,10 @@ router.post(
       if (!user) {
         return res
           .status(401)
-          .json({ result: "error", message: "Invalid credentials" });
+          .json({
+            result: "error",
+            message: "아이디 또는 비밀번호가 틀렸습니다.",
+          });
       }
 
       // 비밀번호 비교

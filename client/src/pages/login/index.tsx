@@ -1,31 +1,31 @@
-import { Button, Card, Flex, Form, Input, message } from 'antd';
-import axios from 'axios';
+import { useState } from 'react';
+// import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { Button, Card, Flex, Form, FormInstance, Input } from 'antd';
+
 import background from '../../assets/image/main.png';
+import SignUpModal from './components/SignupModal';
+
+import useAxios, { Method } from '../../hooks/useAxios';
+
 const LoginPage = () => {
-  const login = async () => {
+  const [signupModalOpen, setsSignupModalOpen] = useState(false);
+  // const navigate = useNavigate();
+  const login = async (formData: FormInstance) => {
+    const { id, password } = formData.getFieldsValue();
     try {
-      const { id, password } = form.getFieldsValue();
-      const res = await axios.post('/login', { id, password });
-      console.log(res);
+      await useAxios({
+        method: Method.POST,
+        url: '/login',
+        body: { id, password },
+      });
     } catch (e) {
-      if (axios.isAxiosError(e)) {
-        const result = e?.response?.data.message;
-        message.error(result);
-      }
+      console.error(e);
     }
   };
 
-  const test = async () => {
-    try {
-      const res = await axios.get('/user_check');
-      console.log(res);
-    } catch (e) {
-      if (axios.isAxiosError(e)) {
-        const result = e?.response?.data.message;
-        message.error(result);
-      }
-    }
+  const onClickSignupBtn = async () => {
+    setsSignupModalOpen(true);
   };
   const [form] = Form.useForm();
   return (
@@ -33,19 +33,28 @@ const LoginPage = () => {
       <Title>몸으로 말해요!</Title>
       <LoginFormContainer>
         <h3>로그인</h3>
-        <FormStyle form={form}>
-          <Form.Item name="id" required>
-            <Input placeholder="아이디" />
+        <Form form={form} layout="vertical" requiredMark={false}>
+          <Form.Item label={<b>아이디</b>} name="id" required>
+            <Input placeholder="아이디" max={20} />
           </Form.Item>
-          <Form.Item name="password" required>
-            <Input.Password visibilityToggle={false} placeholder="비밀번호" />
+          <Form.Item label={<b>비밀번호</b>} name="password" required>
+            <Input.Password
+              visibilityToggle={false}
+              placeholder="비밀번호"
+              max={20}
+            />
           </Form.Item>
-        </FormStyle>
+        </Form>
         <Flex gap="small" justify="center">
-          <Button onClick={login}>로그인</Button>
-          <Button onClick={test}>회원가입</Button>
+          <Button onClick={() => login(form)}>로그인</Button>
+          <Button onClick={onClickSignupBtn}>회원가입</Button>
         </Flex>
       </LoginFormContainer>
+      <SignUpModal
+        open={signupModalOpen}
+        setOpen={setsSignupModalOpen}
+        login={login}
+      />
     </LoginPageContainer>
   );
 };
@@ -101,10 +110,4 @@ const LoginPageContainer = styled.div`
   height: 100%;
   overflow: hidden;
   width: 100%;
-`;
-
-const FormStyle = styled(Form)`
-  label {
-    font-weight: bold;
-  }
 `;
