@@ -14,9 +14,9 @@ const authFail = (res: Response) => {
 
 // 인증 성공시 응답 메시지를 반환합니다.
 const authSuccess = (res: Response) => {
-  return res.status(200).send({
+  return res.status(204).send({
     status: 204,
-    message: "인증 성공.",
+    message: "인증 성공",
   });
 }
 
@@ -50,10 +50,8 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     } catch (refreshErr) {
       // 리프레시 토큰 검증이 실패했을 때의 처리입니다.
       if (refreshErr instanceof jwt.TokenExpiredError) {
-        // 리프레시 토큰이 만료되었다면 새로운 리프레시 토큰을 발급합니다.
-        newRefreshToken(decoded, res);
-        newAccessToken(decoded, res, req);
-        authSuccess(res);
+        // 리프레시 토큰이 만료되었다면 에러 메시지를 반환합니다.
+        authFail(res);
       } else {
         // 기타 다른 오류들에 대한 처리입니다.
         authFail(res);
