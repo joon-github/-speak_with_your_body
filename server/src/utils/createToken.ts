@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
-
 interface Payload {
   user_id: number;
   id?: string;
+  name?: string;
   password?: string;
 }
 
@@ -19,9 +19,9 @@ const generateToken = (
 };
 
 // 액세스 토큰을 쿠키에 저장합니다.
-export const newAccessToken = (decoded :any, res:Response, req:Request) => {
+export const newAccessToken = (decoded: any, res: Response, req: Request) => {
   const newAccessToken = generateToken(
-    { user_id: decoded?.user_id },
+    { user_id: decoded?.user_id, name: decoded.name },
     process.env.JWT_SECRET,
     "1H"
   );
@@ -31,10 +31,10 @@ export const newAccessToken = (decoded :any, res:Response, req:Request) => {
     sameSite: "strict",
   });
   req.user = jwt.decode(newAccessToken) as JwtPayload;
-}
+};
 
 // 리프레시 토큰을 쿠키에 저장합니다.
-export const newRefreshToken = (decoded :any, res:Response) => {
+export const newRefreshToken = (decoded: any, res: Response) => {
   const newRefreshToken = generateToken(
     { user_id: decoded?.user_id },
     process.env.REFRESH_TOKEN_SECRET,
@@ -43,5 +43,5 @@ export const newRefreshToken = (decoded :any, res:Response) => {
   res.cookie("refreshToken", newRefreshToken, {
     httpOnly: true,
     sameSite: "strict",
-  })
-}
+  });
+};

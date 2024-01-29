@@ -10,11 +10,9 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 //router
-const login_1 = __importDefault(require("./api/login"));
-const signUp_1 = __importDefault(require("./api/signUp"));
+const auth_1 = __importDefault(require("./api/auth"));
 const verifyToken_1 = __importDefault(require("./middlewhere/verifyToken"));
 const initializeWebSocket_1 = __importDefault(require("./\bsocket/initializeWebSocket"));
-const { body } = require("express-validator");
 const app = (0, express_1.default)();
 const server = http_1.default.createServer(app);
 const port = 8000;
@@ -27,8 +25,7 @@ app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.use(body_parser_1.default.json());
 app.use((0, cookie_parser_1.default)());
 //Router
-app.use("/login", login_1.default);
-app.use("/sign_up", signUp_1.default);
+app.use("/auth", auth_1.default);
 // 토큰 체크 미들웨어 적용
 app.use(verifyToken_1.default);
 app.get("/user_check", (req, res) => {

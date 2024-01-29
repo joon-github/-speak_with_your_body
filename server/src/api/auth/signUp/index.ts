@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { checkUserExists, createUser } from "./service";
 import { IsString, Length, Matches } from "class-validator";
-import validateRequest from "../../middlewhere/validateRequest";
+import validateRequest from "../../../middlewhere/validateRequest";
 
 const router = express.Router();
 
@@ -36,7 +36,7 @@ router.post(
   validateRequest(SignUpRequest),
   async (req: Request, res: Response) => {
     try {
-      const { id, password } = req.body;
+      const { id, password, name } = req.body;
 
       // 아이디 중복 검사
       const userExists = await checkUserExists(id);
@@ -47,7 +47,7 @@ router.post(
       }
 
       // 사용자 생성
-      await createUser(id, password);
+      await createUser(id, password, name);
 
       res.status(200).json({
         result: "success",

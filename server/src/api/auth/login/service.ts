@@ -1,4 +1,4 @@
-import database from "../../config/database";
+import database from "../../../config/database";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 

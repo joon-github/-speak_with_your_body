@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createUser = exports.checkUserExists = void 0;
-const database_1 = __importDefault(require("../../config/database"));
+const database_1 = __importDefault(require("../../../config/database"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const mysqlConnector = database_1.default.init();
 const checkUserExists = (id) => __awaiter(void 0, void 0, void 0, function* () {
@@ -30,11 +30,11 @@ const checkUserExists = (id) => __awaiter(void 0, void 0, void 0, function* () {
     });
 });
 exports.checkUserExists = checkUserExists;
-const createUser = (id, password) => __awaiter(void 0, void 0, void 0, function* () {
+const createUser = (id, password, name) => __awaiter(void 0, void 0, void 0, function* () {
     const hashedPassword = yield bcrypt_1.default.hash(password, 10);
-    const insertSql = "INSERT INTO s_user (id, password) VALUES (?, ?)";
+    const insertSql = "INSERT INTO s_user (id, password, name) VALUES (?, ?, ?)";
     return new Promise((resolve, reject) => {
-        mysqlConnector.query(insertSql, [id, hashedPassword], (error, results) => {
+        mysqlConnector.query(insertSql, [id, hashedPassword, name], (error, results) => {
             if (error) {
                 reject(error);
             }

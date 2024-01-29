@@ -4,6 +4,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import GlobalStyles from './assets/css/GlobalStyles';
 import axios from 'axios';
+import { RecoilRoot } from 'recoil';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
@@ -16,7 +17,9 @@ axios.defaults.baseURL =
 root.render(
   <React.StrictMode>
     <GlobalStyles />
-    <App />
+    <RecoilRoot>
+      <App />
+    </RecoilRoot>
   </React.StrictMode>,
 );
 

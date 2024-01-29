@@ -12,11 +12,14 @@ const initializeWebSocket = (server: any) => {
       const adapter = wsServer.sockets.adapter;
       const newRoomList = [...adapter.rooms.keys()] // 모든 방 리스트에서
         .filter((room) => !adapter.sids.has(room));
+
+      console.log("roomList", newRoomList);
       return newRoomList;
     }
 
     // 방리스트 보내기
     function sendRoomList() {
+      console.log("send_room_list");
       const roomList = getRoomList();
       wsServer.emit("get_room_list", roomList); // 방리스트를 보내준다.
     }
@@ -26,7 +29,7 @@ const initializeWebSocket = (server: any) => {
       const room = wsServer.sockets.adapter.rooms.get(roomName);
       if (room) {
         const count = room.size;
-        wsServer
+        socket
           .to(roomName)
           .emit("count_room", isDisconnecting ? count - 1 : count);
       } else {
@@ -35,21 +38,22 @@ const initializeWebSocket = (server: any) => {
     }
     //최초 입장시
     socket.on("init", () => {
-      const roomList = getRoomList();
-      socket.emit("get_room_list", roomList);
+      sendRoomList();
     });
 
     socket.on("join_room", (roomName) => {
+      // console.log(roomName);
       socket.join(roomName);
-      socket.to(roomName).emit("welcome", socket.id);
-      countRoom(roomName, false);
-      const roomList = getRoomList();
-      if (!roomList.includes(roomName)) {
-        sendRoomList();
-      }
-      socket.on("disconnect", () => {
-        socket.to(roomName).emit("leave", socket.id);
-      });
+
+      // // socket.to(roomName).emit("welcome", socket.id);
+      // countRoom(roomName, false);
+      // const roomList = getRoomList();
+      // if (!roomList.includes(roomName)) {
+      sendRoomList();
+      // }
+      // socket.on("disconnect", () => {
+      //   socket.to(roomName).emit("leave", socket.id);
+      // });
     });
 
     socket.on("offer", (offer, roomName, peerSocketId) => {

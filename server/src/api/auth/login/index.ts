@@ -1,8 +1,8 @@
 import express, { Request, Response } from "express";
 import { IsString } from "class-validator";
 import { findUserById, validatePassword, generateToken } from "./service";
-import validateRequest from "../../middlewhere/validateRequest";
-import { newAccessToken , newRefreshToken } from "../../utils/createToken";
+import validateRequest from "../../../middlewhere/validateRequest";
+import { newAccessToken, newRefreshToken } from "../../../utils/createToken";
 
 class LoginRequest {
   @IsString({ message: "ID는 문자열이어야 합니다." })

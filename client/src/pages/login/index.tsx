@@ -16,7 +16,7 @@ const LoginPage = () => {
     try {
       await useAxios({
         method: Method.POST,
-        url: '/login',
+        url: '/auth/login',
         body: { id, password },
       });
       navigate('/');

@@ -1,5 +1,4 @@
 import express, { Express, Request, Response } from "express";
-import { Server as SocketIOServer, Socket } from "socket.io";
 import http from "http";
 
 //미들웨어
@@ -8,12 +7,9 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 
 //router
-import loginRouter from "./api/login";
-import signUpRouter from "./api/signUp";
+import authRouter from "./api/auth";
 import verifyToken from "./middlewhere/verifyToken";
 import initializeWebSocket from "./\bsocket/initializeWebSocket";
-
-const { body } = require("express-validator");
 
 const app: Express = express();
 const server = http.createServer(app);
@@ -31,8 +27,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 //Router
-app.use("/login", loginRouter);
-app.use("/sign_up", signUpRouter);
+app.use("/auth", authRouter);
 
 // 토큰 체크 미들웨어 적용
 app.use(verifyToken);

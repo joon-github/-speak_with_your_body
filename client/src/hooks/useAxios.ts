@@ -9,6 +9,17 @@ export enum Method {
   PATCH = 'PATCH',
 }
 
+export interface UserResponseData {
+  user_id: number;
+  name: string;
+}
+
+interface UserResponse {
+  result: string;
+  message: string;
+  data: UserResponseData;
+}
+
 type UseAxiosType<T = unknown> = {
   method: Method;
   url: string;
@@ -19,7 +30,7 @@ const useAxios = async <T>({
   method,
   url,
   body,
-}: UseAxiosType<T>): Promise<unknown> => {
+}: UseAxiosType<T>): Promise<UserResponse> => {
   try {
     const config = {
       method: method,
@@ -33,13 +44,11 @@ const useAxios = async <T>({
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log(error);
-      // if (
-      //   error.response?.status &&
-      //   [401, 403].includes(error.response.status)
-      // ) {
-      //   window.location.href = '/login';
-      // }
-      const result = error?.response?.data.message || 'An error occurred';
+      if (error.response?.status && [403].includes(error.response.status)) {
+        window.location.href = '/login';
+      }
+      const result =
+        error?.response?.data.message || '서버에 문제가 생겼습니다.';
       message.error(result);
     }
     throw error;

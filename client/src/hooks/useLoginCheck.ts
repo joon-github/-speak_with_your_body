@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
 import useAxios, { Method } from './useAxios';
-// import { useNavigate } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
+import { userInfoState } from '../store/userStore';
 
 const useLoginCheck = () => {
-  // const navigate = useNavigate();
+  const setUserInfo = useSetRecoilState(userInfoState);
   useEffect(() => {
     const loginCheack = async () => {
       try {
@@ -11,7 +12,7 @@ const useLoginCheck = () => {
           method: Method.GET,
           url: '/user_check',
         });
-        console.log('res', res);
+        setUserInfo(res.data);
       } catch (e) {
         console.error('eeeee', e);
       }
