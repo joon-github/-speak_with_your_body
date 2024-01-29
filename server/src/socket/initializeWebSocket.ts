@@ -38,6 +38,7 @@ const initializeWebSocket = (server: any) => {
     }
     //최초 입장시
     socket.on("init", () => {
+      console.log("init");
       sendRoomList();
     });
 

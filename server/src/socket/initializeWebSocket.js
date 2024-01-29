@@ -36,6 +36,7 @@ const initializeWebSocket = (server) => {
         }
         //최초 입장시
         socket.on("init", () => {
+            console.log("init");
             sendRoomList();
         });
         socket.on("join_room", (roomName) => {

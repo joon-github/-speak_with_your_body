@@ -9,11 +9,13 @@ import SignUpModal from './components/SignupModal';
 import useAxios, { Method } from '../../hooks/useAxios';
 
 const LoginPage = () => {
+  const [isLoding, setIsLoading] = useState(false);
   const [signupModalOpen, setsSignupModalOpen] = useState(false);
   const navigate = useNavigate();
   const login = async (formData: FormInstance) => {
     const { id, password } = formData.getFieldsValue();
     try {
+      setIsLoading(true);
       await useAxios({
         method: Method.POST,
         url: '/auth/login',
@@ -22,6 +24,8 @@ const LoginPage = () => {
       navigate('/');
     } catch (e) {
       console.error(e);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -47,7 +51,9 @@ const LoginPage = () => {
           </Form.Item>
         </Form>
         <Flex gap="small" justify="center">
-          <Button onClick={() => login(form)}>로그인</Button>
+          <Button loading={isLoding} onClick={() => login(form)}>
+            로그인
+          </Button>
           <Button onClick={onClickSignupBtn}>회원가입</Button>
         </Flex>
       </LoginFormContainer>

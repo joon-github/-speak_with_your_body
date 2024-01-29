@@ -18,5 +18,6 @@ const MainLayoutContainer = styled.div`
   main {
     height: 100%;
     width: 100%;
+    padding: 10px 10%;
   }
 `;

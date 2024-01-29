@@ -1,18 +1,30 @@
 import { useEffect, useState } from 'react';
-import useLoginCheck from '../../hooks/useLoginCheck';
+import { useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
+
+import { Button, Input, Spin } from 'antd';
+import styled from 'styled-components';
+
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../../store/userStore';
-import { Button, Input } from 'antd';
+
 import useAxios, { Method } from '../../hooks/useAxios';
-import { useNavigate } from 'react-router-dom';
+import useLoginCheck from '../../hooks/useLoginCheck';
+
 const HomePage = () => {
+  const socket = io('http://localhost:8000');
   const navigate = useNavigate();
   useLoginCheck();
-  const socket = io('http://localhost:8000');
   const userInfo = useRecoilValue(userInfoState);
   const [roomList, setRoomList] = useState([]);
   const [joinRoomInputValue, setJoinRoomInputValue] = useState('');
+  const [socketConnected, SetSocketconnected] = useState(false);
+
+  useEffect(() => {
+    if (socket?.connect()) {
+      SetSocketconnected(socket?.connect().connected);
+    }
+  }, [socket]);
 
   useEffect(() => {
     if (userInfo) {
@@ -21,7 +33,6 @@ const HomePage = () => {
         console.log(roomCount);
       });
       socket.on('get_room_list', (roomList) => {
-        console.log('get_room_list');
         setRoomList(roomList);
       });
     }
@@ -45,19 +56,65 @@ const HomePage = () => {
   };
 
   return (
-    <div>
-      <Input
-        onChange={(e) => {
-          setJoinRoomInputValue(e.target.value);
-        }}
-      />
-      <Button onClick={joinRoom}>방입장</Button>
-      <Button onClick={logout}>로그아웃</Button>
-      {roomList.map((room, index) => (
-        <div key={index}>{room}</div>
-      ))}
-    </div>
+    <HomePageContainer>
+      {socketConnected ? (
+        <>
+          <Input
+            onChange={(e) => {
+              setJoinRoomInputValue(e.target.value);
+            }}
+          />
+          <Button onClick={joinRoom}>방입장</Button>
+          <Button onClick={logout}>로그아웃</Button>
+          <RoomList>
+            {roomList.map((room, index) => (
+              <Room key={index}>
+                <div className="title">
+                  <span className="roomNumber">047</span>
+                  <h3>{room}</h3>
+                </div>
+              </Room>
+            ))}
+          </RoomList>
+        </>
+      ) : (
+        <Spin />
+      )}
+    </HomePageContainer>
   );
 };
 
 export default HomePage;
+
+const HomePageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
+
+const RoomList = styled.section`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 20px;
+  background: red;
+  flex: 1;
+`;
+
+const Room = styled.article`
+  width: 300px;
+  height: 200px;
+  background-color: green;
+  .title {
+    display: flex;
+    align-items: center;
+    background-color: gray;
+    .roomNumber {
+      border: 1px solid black;
+      width: 50px;
+    }
+    h3 {
+      margin: 0;
+    }
+  }
+`;
