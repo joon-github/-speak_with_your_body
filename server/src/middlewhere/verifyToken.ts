@@ -12,7 +12,7 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
   if (!token) {
     return res
       .status(403)
-      .send({ status: 403, message: "인증 실패. 토큰이 제공되지 않았습니다." });
+      .send({ status: 403, message: "인증 실패." });
   }
 
   try {
@@ -25,8 +25,8 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     if (!refreshToken) {
       // 리프레시 토큰도 없는 경우, 에러 메시지를 반환합니다.
       return res.status(401).send({
-        status: 401,
-        message: "유효하지 않은 토큰이며 리프레시 토큰도 사용할 수 없습니다.",
+        status: 403,
+        message: "인증 실패.",
       });
     }
 
@@ -38,7 +38,7 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
       const newAccessToken = generateToken(
         { user_id: decoded?.user_id },
         process.env.JWT_SECRET,
-        "5s"
+        "1H"
       );
 
       // 새로운 액세스 토큰을 쿠키에 설정합니다.
@@ -50,7 +50,6 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
       next();
     } catch (refreshErr) {
       // 리프레시 토큰 검증이 실패했을 때의 처리입니다.
-      console.log(refreshErr instanceof jwt.TokenExpiredError);
       if (refreshErr instanceof jwt.TokenExpiredError) {
         // 리프레시 토큰이 만료되었다면 새로운 리프레시 토큰을 발급합니다.
 
@@ -69,15 +68,12 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
           httpOnly: true,
           sameSite: "strict",
         });
-
-        res
-          .status(200)
-          .send({ message: "새로운 리프레시 토큰이 발급되었습니다." });
+        next();
       } else {
         // 기타 다른 오류들에 대한 처리입니다.
         return res.status(401).send({
-          status: 401,
-          message: "유효하지 않은 리프레시 토큰입니다.",
+          status: 403,
+          message: "인증실패",
         });
       }
     }
