@@ -4,17 +4,29 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import GlobalStyles from './assets/css/GlobalStyles';
 import { RecoilRoot } from 'recoil';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import axiosSetting from './utils/axiosSetting';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
 );
 axiosSetting();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5분
+      retry: 0, // 실패시 재시도 횟수
+      enabled: true, // 쿼리 활성화 여부
+    },
+  },
+});
 root.render(
   <React.StrictMode>
     <GlobalStyles />
-    <RecoilRoot>
-      <App />
-    </RecoilRoot>
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot>
+        <App />
+      </RecoilRoot>
+    </QueryClientProvider>
   </React.StrictMode>,
 );
 
