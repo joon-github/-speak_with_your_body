@@ -1,31 +1,33 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useMutation } from 'react-query';
 import styled from 'styled-components';
 import { Button, Card, Flex, Form, FormInstance, Input } from 'antd';
 
 import background from '../../assets/image/main.png';
 import SignUpModal from './components/SignupModal';
 
-import useAxios, { Method } from '../../hooks/useAxios';
+import axios from 'axios';
 
 const LoginPage = () => {
-  const [isLoding, setIsLoading] = useState(false);
   const [signupModalOpen, setsSignupModalOpen] = useState(false);
   const navigate = useNavigate();
+  const { mutate: loginMutation, isLoading } = useMutation(
+    (data: { id: string; password: string }) => {
+      return axios.post('/auth/login', data);
+    },
+    {
+      onSuccess: () => {
+        navigate('/');
+      },
+    },
+  );
   const login = async (formData: FormInstance) => {
     const { id, password } = formData.getFieldsValue();
     try {
-      setIsLoading(true);
-      await useAxios({
-        method: Method.POST,
-        url: '/auth/login',
-        body: { id, password },
-      });
-      navigate('/');
+      loginMutation({ id, password });
     } catch (e) {
       console.error(e);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -51,7 +53,7 @@ const LoginPage = () => {
           </Form.Item>
         </Form>
         <Flex gap="small" justify="center">
-          <Button loading={isLoding} onClick={() => login(form)}>
+          <Button loading={isLoading} onClick={() => login(form)}>
             로그인
           </Button>
           <Button onClick={onClickSignupBtn}>회원가입</Button>

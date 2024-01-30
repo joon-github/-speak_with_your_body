@@ -1,21 +1,32 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
+import { useQuery, useMutation } from 'react-query';
 
 import { Button, Input, Spin } from 'antd';
 import styled from 'styled-components';
 
-import { useRecoilValue } from 'recoil';
-import { userInfoState } from '../../store/userStore';
-
-import useAxios, { Method } from '../../hooks/useAxios';
-import useLoginCheck from '../../hooks/useLoginCheck';
+import fetcher from '../../utils/fetcher';
+import axios from 'axios';
 
 const HomePage = () => {
-  const socket = io('http://localhost:8000');
   const navigate = useNavigate();
-  useLoginCheck();
-  const userInfo = useRecoilValue(userInfoState);
+  const { data: userInfo } = useQuery('user_check', () =>
+    fetcher('/user_check'),
+  );
+  const { mutate: logoutMutation } = useMutation(
+    () => {
+      return axios.post('/auth/logout');
+    },
+    {
+      onSuccess: () => {
+        navigate('/login');
+      },
+    },
+  );
+
+  const socket = io('http://localhost:8000');
+
   const [roomList, setRoomList] = useState([]);
   const [joinRoomInputValue, setJoinRoomInputValue] = useState('');
   const [socketConnected, SetSocketconnected] = useState(false);
@@ -45,41 +56,32 @@ const HomePage = () => {
 
   const logout = async () => {
     try {
-      await useAxios({
-        method: Method.POST,
-        url: '/auth/logout',
-      });
-      navigate('/login');
+      logoutMutation();
     } catch (e) {
       console.log(e);
     }
   };
 
+  if (!socketConnected) return <Spin />;
   return (
     <HomePageContainer>
-      {socketConnected ? (
-        <>
-          <Input
-            onChange={(e) => {
-              setJoinRoomInputValue(e.target.value);
-            }}
-          />
-          <Button onClick={joinRoom}>방입장</Button>
-          <Button onClick={logout}>로그아웃</Button>
-          <RoomList>
-            {roomList.map((room, index) => (
-              <Room key={index}>
-                <div className="title">
-                  <span className="roomNumber">047</span>
-                  <h3>{room}</h3>
-                </div>
-              </Room>
-            ))}
-          </RoomList>
-        </>
-      ) : (
-        <Spin />
-      )}
+      <Input
+        onChange={(e) => {
+          setJoinRoomInputValue(e.target.value);
+        }}
+      />
+      <Button onClick={joinRoom}>방입장</Button>
+      <Button onClick={logout}>로그아웃</Button>
+      <RoomList>
+        {roomList.map((room, index) => (
+          <Room key={index}>
+            <div className="title">
+              <span className="roomNumber">047</span>
+              <h3>{room}</h3>
+            </div>
+          </Room>
+        ))}
+      </RoomList>
     </HomePageContainer>
   );
 };

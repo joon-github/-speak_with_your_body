@@ -1,6 +1,7 @@
 import React from 'react';
 import { Form, FormInstance, Input, Modal } from 'antd';
-import useAxios, { Method } from '../../../hooks/useAxios';
+import { useMutation } from 'react-query';
+import axios from 'axios';
 
 type PropsTyeps = {
   open: boolean;
@@ -10,6 +11,16 @@ type PropsTyeps = {
 
 const SignupModal = ({ open, setOpen, login }: PropsTyeps) => {
   const [form] = Form.useForm();
+  const { mutate: signUpMutation } = useMutation(
+    (data: { id: string; name: string; password: string }) => {
+      return axios.post('/auth/sign_up', data);
+    },
+    {
+      onSuccess: () => {
+        login(form);
+      },
+    },
+  );
   const onCancel = () => {
     setOpen(false);
     form.resetFields();
@@ -18,12 +29,7 @@ const SignupModal = ({ open, setOpen, login }: PropsTyeps) => {
   const onSubmitSignUp = async () => {
     try {
       const { id, name, password } = await form.validateFields();
-      await useAxios({
-        method: Method.POST,
-        url: '/sign_up',
-        body: { id, name, password },
-      });
-      login(form);
+      signUpMutation({ id, name, password });
     } catch (e) {
       console.error(e);
     }
