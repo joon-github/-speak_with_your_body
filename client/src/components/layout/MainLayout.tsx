@@ -1,13 +1,16 @@
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 import ErrorBoundary from '../ErrorBoundary';
+import PageTransitionProvider from './PageTransitionProvider';
 
 const MainLayout = () => {
   return (
     <MainLayoutContainer>
       <main>
         <ErrorBoundary>
-          <Outlet />
+          <PageTransitionProvider>
+            <Outlet />
+          </PageTransitionProvider>
         </ErrorBoundary>
       </main>
     </MainLayoutContainer>
