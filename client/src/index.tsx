@@ -3,17 +3,12 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import GlobalStyles from './assets/css/GlobalStyles';
-import axios from 'axios';
 import { RecoilRoot } from 'recoil';
-
+import axiosSetting from './utils/axiosSetting';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
 );
-axios.defaults.withCredentials = true;
-axios.defaults.baseURL =
-  location.origin === 'http://localhost:3000'
-    ? 'http://localhost:8000'
-    : location.origin;
+axiosSetting();
 root.render(
   <React.StrictMode>
     <GlobalStyles />
