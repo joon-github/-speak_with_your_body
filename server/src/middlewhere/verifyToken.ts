@@ -1,16 +1,17 @@
 import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
-import { newAccessToken , newRefreshToken } from "../utils/createToken";
+import { newAccessToken } from "../utils/createToken";
 
 
 // 인증 실패시 에러 메시지를 반환합니다.
 const authFail = (res: Response) => {
-  return res.status(403).send({
-    status: 403,
+  return res.status(401).send({
+    status: 401,
     message: "인증 실패.",
   });
 }
+
 
 // 인증 성공시 응답 메시지를 반환합니다.
 const authSuccess = (res: Response) => {

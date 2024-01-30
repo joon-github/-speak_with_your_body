@@ -25,7 +25,7 @@ const axiosSetting = () => {
     },
     (error) => {
       if (axios.isAxiosError(error)) {
-        if (error.response?.status && [403].includes(error.response.status)) {
+        if (error.response?.status && [401].includes(error.response.status)) {
           window.location.href = '/login';
         }
         const result =

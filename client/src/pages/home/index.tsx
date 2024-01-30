@@ -4,7 +4,7 @@ import { Button, Input, Spin } from 'antd';
 import styled from 'styled-components';
 
 import useLogoutMutation from '../../hooks/auth/useLogoutMutation';
-import useSockettSetting from '../../hooks/socket/useSocketSetting';
+import useSockettSetting from '../../hooks/socket/useSocketRoom';
 
 const HomePage = () => {
   const { mutate: logoutMutation } = useLogoutMutation();
