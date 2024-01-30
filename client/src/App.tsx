@@ -1,10 +1,10 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
-// import io from 'socket.io-client';
 import MainLayout from './components/layout/MainLayout';
-import HomePage from './pages/home';
 
 const LoginPage = React.lazy(() => import('./pages/login'));
+const HomePage = React.lazy(() => import('./pages/home'));
+
 function App() {
   return (
     <BrowserRouter>
