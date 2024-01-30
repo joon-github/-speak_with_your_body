@@ -1,56 +1,17 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import io from 'socket.io-client';
-import { useQuery, useMutation } from 'react-query';
+import { useState } from 'react';
 
 import { Button, Input, Spin } from 'antd';
 import styled from 'styled-components';
 
-import fetcher from '../../utils/fetcher';
-import axios from 'axios';
+import useLogoutMutation from '../../hooks/auth/useLogoutMutation';
+import useSockettSetting from '../../hooks/socket/useSocketSetting';
 
 const HomePage = () => {
-  const navigate = useNavigate();
-  const { data: userInfo } = useQuery('user_check', () =>
-    fetcher('/user_check'),
-  );
-  const { mutate: logoutMutation } = useMutation(
-    () => {
-      return axios.post('/auth/logout');
-    },
-    {
-      onSuccess: () => {
-        navigate('/login');
-      },
-    },
-  );
-
-  const socket = io('http://localhost:8000');
-
-  const [roomList, setRoomList] = useState([]);
+  const { mutate: logoutMutation } = useLogoutMutation();
   const [joinRoomInputValue, setJoinRoomInputValue] = useState('');
-  const [socketConnected, SetSocketconnected] = useState(false);
-
-  useEffect(() => {
-    if (socket?.connect()) {
-      SetSocketconnected(socket?.connect().connected);
-    }
-  }, [socket]);
-
-  useEffect(() => {
-    if (userInfo) {
-      socket.emit('init');
-      socket.on('count_room', (roomCount) => {
-        console.log(roomCount);
-      });
-      socket.on('get_room_list', (roomList) => {
-        setRoomList(roomList);
-      });
-    }
-  }, [userInfo]);
+  const { isLoading: socketConnected, roomList, socket } = useSockettSetting();
 
   const joinRoom = () => {
-    console.log('join_room');
     socket.emit('join_room', joinRoomInputValue);
   };
 
