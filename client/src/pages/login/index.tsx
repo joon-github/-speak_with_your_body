@@ -10,7 +10,11 @@ import useLoginMutation from '../../hooks/auth/useLoginMutation';
 const LoginPage = () => {
   const [form] = Form.useForm();
   const [signupModalOpen, setsSignupModalOpen] = useState(false);
-  const { mutate: loginMutation, isLoading } = useLoginMutation();
+  const { mutate: loginMutation, isLoading, error } = useLoginMutation();
+
+  if (error) {
+    throw error;
+  }
 
   const login = async (formData: FormInstance) => {
     const { id, password } = formData.getFieldsValue();

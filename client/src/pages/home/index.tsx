@@ -7,7 +7,8 @@ import useLogoutMutation from '../../hooks/auth/useLogoutMutation';
 import useSockettSetting from '../../hooks/socket/useSocketRoom';
 
 const HomePage = () => {
-  const { mutate: logoutMutation } = useLogoutMutation();
+  const { mutate: logoutMutation, error } = useLogoutMutation();
+
   const [joinRoomInputValue, setJoinRoomInputValue] = useState('');
   const { isLoading: socketConnected, roomList, socket } = useSockettSetting();
 
@@ -22,7 +23,9 @@ const HomePage = () => {
       console.log(e);
     }
   };
-
+  if (error) {
+    throw error;
+  }
   if (!socketConnected) return <Spin />;
   return (
     <HomePageContainer>

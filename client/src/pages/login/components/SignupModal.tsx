@@ -11,7 +11,7 @@ type PropsTyeps = {
 
 const SignupModal = ({ open, setOpen, login }: PropsTyeps) => {
   const [form] = Form.useForm();
-  const { mutate: signUpMutation } = useMutation(
+  const { mutate: signUpMutation, error } = useMutation(
     (data: { id: string; name: string; password: string }) => {
       return axios.post('/auth/sign_up', data);
     },
@@ -34,6 +34,9 @@ const SignupModal = ({ open, setOpen, login }: PropsTyeps) => {
       console.error(e);
     }
   };
+  if (error) {
+    throw error;
+  }
 
   return (
     <Modal

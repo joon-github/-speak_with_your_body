@@ -6,7 +6,10 @@ const useSockettSetting = () => {
   const socket = io('http://localhost:8000');
   const [socketConnected, SetSocketconnected] = useState(false);
   const [roomList, setRoomList] = useState([]);
-  const { data: userInfo } = useUserCheckQuery();
+  const { data: userInfo, error } = useUserCheckQuery();
+  if (error) {
+    throw error;
+  }
   useEffect(() => {
     if (socket?.connect()) {
       SetSocketconnected(socket?.connect().connected);

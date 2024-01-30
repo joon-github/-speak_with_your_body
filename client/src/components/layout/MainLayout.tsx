@@ -1,11 +1,14 @@
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
-// import background from '../../assets/image/main.png';
+import ErrorBoundary from '../ErrorBoundary';
+
 const MainLayout = () => {
   return (
     <MainLayoutContainer>
       <main>
-        <Outlet />
+        <ErrorBoundary>
+          <Outlet />
+        </ErrorBoundary>
       </main>
     </MainLayoutContainer>
   );
