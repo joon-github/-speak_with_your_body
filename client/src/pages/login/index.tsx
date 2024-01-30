@@ -1,27 +1,17 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useMutation } from 'react-query';
 import styled from 'styled-components';
 import { Button, Card, Flex, Form, FormInstance, Input } from 'antd';
 
 import background from '../../assets/image/main.png';
 import SignUpModal from './components/SignupModal';
 
-import axios from 'axios';
+import useLoginMutation from '../../hooks/auth/useLoginMutation';
 
 const LoginPage = () => {
+  const [form] = Form.useForm();
   const [signupModalOpen, setsSignupModalOpen] = useState(false);
-  const navigate = useNavigate();
-  const { mutate: loginMutation, isLoading } = useMutation(
-    (data: { id: string; password: string }) => {
-      return axios.post('/auth/login', data);
-    },
-    {
-      onSuccess: () => {
-        navigate('/');
-      },
-    },
-  );
+  const { mutate: loginMutation, isLoading } = useLoginMutation();
+
   const login = async (formData: FormInstance) => {
     const { id, password } = formData.getFieldsValue();
     try {
@@ -34,7 +24,6 @@ const LoginPage = () => {
   const onClickSignupBtn = async () => {
     setsSignupModalOpen(true);
   };
-  const [form] = Form.useForm();
   return (
     <LoginPageContainer style={{ backgroundImage: `url(${background})` }}>
       <Title>몸으로 말해요!</Title>
