@@ -18,8 +18,8 @@ const initializeWebSocket = (server: any) => {
 
     // 방리스트 보내기
     function sendRoomList() {
-      console.log("send_room_list");
       const roomList = getRoomList();
+      console.log("send_room_list", roomList);
       wsServer.emit("get_room_list", roomList); // 방리스트를 보내준다.
     }
 
@@ -41,15 +41,12 @@ const initializeWebSocket = (server: any) => {
       sendRoomList();
     });
 
-    socket.on("join_room", (roomName) => {
-      // console.log(roomName);
-      socket.join(roomName);
-
-      // socket.to(roomName).emit("welcome", socket.id);
-      countRoom(roomName, false);
+    socket.on("join_room", (roomName, key) => {
       const roomList = getRoomList();
-      if (!roomList.includes(roomName)) {
-      sendRoomList();
+      socket.join(`${roomName}&${key}`);
+      countRoom(roomName, false);
+      if (!roomList.includes(String(roomName))) {
+        sendRoomList();
       }
       socket.on("disconnect", () => {
         socket.to(roomName).emit("leave", socket.id);

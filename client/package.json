@@ -19,6 +19,7 @@
     "react-router-dom": "^6.21.3",
     "react-scripts": "^5.0.1",
     "react-transition-group": "^4.4.5",
+    "react-uuid": "^2.0.0",
     "recoil": "^0.7.7",
     "socket.io-client": "^4.7.4",
     "styled-components": "^6.1.8",

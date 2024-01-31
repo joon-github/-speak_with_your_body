@@ -4,16 +4,36 @@ import { Button, Input, Spin } from 'antd';
 import styled from 'styled-components';
 
 import useLogoutMutation from '../../hooks/auth/useLogoutMutation';
-import useSockettSetting from '../../hooks/socket/useSocketRoom';
+import useRoomList from '../../hooks/socket/useRoomList';
+import uuid from 'react-uuid';
+import { useNavigate } from 'react-router-dom';
+import useUserCheckQuery from '../../hooks/auth/useUserCheckQuery';
+import { useSocket } from '../../components/provider/SocketProvider';
 
 const HomePage = () => {
+  const socket = useSocket();
+  const navigate = useNavigate();
+
+  const { data: userInfo, error: userCheckError } = useUserCheckQuery();
+  if (userCheckError) {
+    throw userCheckError;
+  }
+  console.log(userInfo);
+
   const { mutate: logoutMutation, error } = useLogoutMutation();
-  const { isLoading: socketConnected, roomList, socket } = useSockettSetting();
+  const { isLoading: socketConnected, roomList } = useRoomList();
 
   const [joinRoomInputValue, setJoinRoomInputValue] = useState('');
 
-  const joinRoom = () => {
-    socket.emit('join_room', joinRoomInputValue);
+  const createRoom = () => {
+    const roomKey = uuid();
+    socket?.emit('join_room', joinRoomInputValue, roomKey);
+  };
+
+  const joinRoom = (event: React.MouseEvent<HTMLDivElement>) => {
+    const roomName = event.currentTarget.getAttribute('data-roomname');
+    const roomKey = event.currentTarget.getAttribute('data-roomkey');
+    navigate(`/room/${roomKey}`, { state: roomName });
   };
 
   const logout = async () => {
@@ -34,17 +54,25 @@ const HomePage = () => {
           setJoinRoomInputValue(e.target.value);
         }}
       />
-      <Button onClick={joinRoom}>방입장</Button>
+      <Button onClick={createRoom}>방생성</Button>
       <Button onClick={logout}>로그아웃</Button>
       <RoomList>
-        {roomList.map((room, index) => (
-          <Room key={index}>
-            <div className="title">
-              <span className="roomNumber">047</span>
-              <h3>{room}</h3>
-            </div>
-          </Room>
-        ))}
+        {roomList.map((room: string, index) => {
+          const [roomName, roomKey] = room.split('&');
+          return (
+            <Room
+              key={index}
+              onClick={joinRoom}
+              data-roomname={room}
+              data-roomkey={roomKey}
+            >
+              <div className="title">
+                <span className="roomNumber">047</span>
+                <h3>{roomName}</h3>
+              </div>
+            </Room>
+          );
+        })}
       </RoomList>
     </HomePageContainer>
   );
@@ -63,7 +91,6 @@ const RoomList = styled.section`
   flex-wrap: wrap;
   gap: 20px;
   padding: 20px;
-  background: red;
   flex: 1;
 `;
 

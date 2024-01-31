@@ -1,9 +1,10 @@
 import React, { Suspense } from 'react';
-import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import MainLayout from './components/layout/MainLayout';
 
 const LoginPage = React.lazy(() => import('./pages/login'));
 const HomePage = React.lazy(() => import('./pages/home'));
+const RoomPage = React.lazy(() => import('./pages/room'));
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Routes>
           <Route element={<MainLayout />}>
             <Route path="/" element={<HomePage />} />
+            <Route path="/room/:roomkey" element={<RoomPage />} />
           </Route>
           <Route path="/login" element={<LoginPage />} />
           <Route path="*" element={<Navigate to="/" />} />
