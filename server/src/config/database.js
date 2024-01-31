@@ -14,7 +14,16 @@ const db_info = {
 };
 exports.default = {
     init: function () {
-        return mysql_1.default.createConnection(db_info);
+        // mysql 모듈을 이용해 커넥션을 생성합니다.
+        // 성공하면 콘솔창에 메시지를 출력합니다.
+        const conn = mysql_1.default.createConnection(db_info);
+        conn.connect(function (err) {
+            if (err)
+                console.error("mysql connection error : " + err);
+            else
+                console.log("mysql is connected successfully!");
+        });
+        return conn;
     },
     connect: function (conn) {
         conn.connect(function (err) {

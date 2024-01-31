@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useMutation } from 'react-query';
-import { useNavigate } from 'react-router';
-const navigate = useNavigate();
+// import { useNavigate } from 'react-router';
+// const navigate = useNavigate();
 
 const useLogoutMutation = () => {
   return useMutation(
@@ -10,7 +10,7 @@ const useLogoutMutation = () => {
     },
     {
       onSuccess: () => {
-        navigate('/login');
+        // navigate('/login');
       },
     },
   );

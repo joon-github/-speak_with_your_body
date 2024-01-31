@@ -7,8 +7,8 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const createToken_1 = require("../utils/createToken");
 // 인증 실패시 에러 메시지를 반환합니다.
 const authFail = (res) => {
-    return res.status(403).send({
-        status: 403,
+    return res.status(401).send({
+        status: 401,
         message: "인증 실패.",
     });
 };

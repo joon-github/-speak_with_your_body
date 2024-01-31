@@ -42,15 +42,15 @@ const initializeWebSocket = (server) => {
         socket.on("join_room", (roomName) => {
             // console.log(roomName);
             socket.join(roomName);
-            // // socket.to(roomName).emit("welcome", socket.id);
-            // countRoom(roomName, false);
-            // const roomList = getRoomList();
-            // if (!roomList.includes(roomName)) {
-            sendRoomList();
-            // }
-            // socket.on("disconnect", () => {
-            //   socket.to(roomName).emit("leave", socket.id);
-            // });
+            // socket.to(roomName).emit("welcome", socket.id);
+            countRoom(roomName, false);
+            const roomList = getRoomList();
+            if (!roomList.includes(roomName)) {
+                sendRoomList();
+            }
+            socket.on("disconnect", () => {
+                socket.to(roomName).emit("leave", socket.id);
+            });
         });
         socket.on("offer", (offer, roomName, peerSocketId) => {
             socket.to(peerSocketId).emit("offer", offer, socket.id);

@@ -8,8 +8,13 @@ const useLoginMutation = () => {
       return axios.post('/auth/login', data);
     },
     {
-      onSuccess: () => {
+      onSuccess: (res) => {
+        if (res.request.status === 401) return;
         navigate('/');
+      },
+      //실패시
+      onError: (error) => {
+        console.log(error);
       },
     },
   );

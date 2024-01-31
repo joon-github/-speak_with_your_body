@@ -8,9 +8,9 @@ import useSockettSetting from '../../hooks/socket/useSocketRoom';
 
 const HomePage = () => {
   const { mutate: logoutMutation, error } = useLogoutMutation();
+  const { isLoading: socketConnected, roomList, socket } = useSockettSetting();
 
   const [joinRoomInputValue, setJoinRoomInputValue] = useState('');
-  const { isLoading: socketConnected, roomList, socket } = useSockettSetting();
 
   const joinRoom = () => {
     socket.emit('join_room', joinRoomInputValue);
