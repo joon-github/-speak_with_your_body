@@ -30,7 +30,7 @@ const axiosSetting = () => {
         if (error.response?.status && [402].includes(error.response.status)) {
           axios.post('/auth/refreshToken').then((res) => {
             // 새로운 토큰을 발급받았을 경우, 재요청
-            if (res.data.status === 204) {
+            if (res.data.status === 200) {
               if (error.config) {
                 axios.request(error.config);
               }
