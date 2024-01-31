@@ -26,7 +26,7 @@ router.post(
       // 사용자 정보 조회
       const user = await findUserById(id);
       if (!user) {
-        return res.status(401).json({
+        return res.status(400).json({
           result: "error",
           message: "아이디 또는 비밀번호가 틀렸습니다.",
         });
@@ -42,7 +42,7 @@ router.post(
         });
       } else {
         res
-          .status(401)
+          .status(400)
           .json({ result: "error", message: "아이디 또는 비밀번호가 틀렸습니다." });
       }
     } catch (e) {

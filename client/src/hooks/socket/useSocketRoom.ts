@@ -7,22 +7,21 @@ const useSockettSetting = () => {
   const [socketConnected, SetSocketconnected] = useState(false);
   const [roomList, setRoomList] = useState([]);
   const { data: userInfo, error } = useUserCheckQuery();
+  console.log(userInfo);
   if (error) {
     throw error;
   }
 
   useEffect(() => {
-    if (userInfo) {
-      socket.emit('init');
-      socket.on('count_room', (roomCount) => {
-        console.log(roomCount);
-      });
-      socket.on('get_room_list', (roomList) => {
-        SetSocketconnected(true);
-        setRoomList(roomList);
-      });
-    }
-  }, [userInfo]);
+    socket.emit('init');
+    socket.on('count_room', (roomCount) => {
+      console.log(roomCount);
+    });
+    socket.on('get_room_list', (roomList) => {
+      SetSocketconnected(true);
+      setRoomList(roomList);
+    });
+  }, []);
 
   return { isLoading: socketConnected, socket, roomList };
 };

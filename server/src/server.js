@@ -12,7 +12,7 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 //router
 const auth_1 = __importDefault(require("./api/auth"));
 const verifyToken_1 = __importDefault(require("./middlewhere/verifyToken"));
-const initializeWebSocket_1 = __importDefault(require("./\bsocket/initializeWebSocket"));
+const initializeWebSocket_1 = __importDefault(require("./socket/initializeWebSocket"));
 const app = (0, express_1.default)();
 const server = http_1.default.createServer(app);
 const port = 8000;

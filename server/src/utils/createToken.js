@@ -13,7 +13,7 @@ const generateToken = (payload, secret, expiresIn) => {
 };
 // 액세스 토큰을 쿠키에 저장합니다.
 const newAccessToken = (decoded, res, req) => {
-    const newAccessToken = generateToken({ user_id: decoded === null || decoded === void 0 ? void 0 : decoded.user_id, name: decoded.name }, process.env.JWT_SECRET, "1H");
+    const newAccessToken = generateToken({ user_id: decoded === null || decoded === void 0 ? void 0 : decoded.user_id, name: decoded.name }, process.env.JWT_SECRET, "3m");
     // accessToken을 쿠키에 저장합니다.
     res.cookie("accessToken", newAccessToken, {
         httpOnly: true,
@@ -24,11 +24,11 @@ const newAccessToken = (decoded, res, req) => {
 exports.newAccessToken = newAccessToken;
 // 리프레시 토큰을 쿠키에 저장합니다.
 const newRefreshToken = (decoded, res) => {
-    const newRefreshToken = generateToken({ user_id: decoded === null || decoded === void 0 ? void 0 : decoded.user_id }, process.env.REFRESH_TOKEN_SECRET, "1D");
+    const newRefreshToken = generateToken({ user_id: decoded === null || decoded === void 0 ? void 0 : decoded.user_id, name: decoded.name }, process.env.REFRESH_TOKEN_SECRET, "7D");
     res.cookie("refreshToken", newRefreshToken, {
         httpOnly: true,
         sameSite: "strict",
-        path: '/auth/refreshToken'
+        path: '/auth/accessToken'
     });
 };
 exports.newRefreshToken = newRefreshToken;

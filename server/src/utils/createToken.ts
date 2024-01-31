@@ -23,7 +23,7 @@ export const newAccessToken = (decoded: any, res: Response, req: Request) => {
   const newAccessToken = generateToken(
     { user_id: decoded?.user_id, name: decoded.name },
     process.env.JWT_SECRET,
-    "1H"
+    "3m"
   );
   // accessToken을 쿠키에 저장합니다.
   res.cookie("accessToken", newAccessToken, {
@@ -36,13 +36,13 @@ export const newAccessToken = (decoded: any, res: Response, req: Request) => {
 // 리프레시 토큰을 쿠키에 저장합니다.
 export const newRefreshToken = (decoded: any, res: Response) => {
   const newRefreshToken = generateToken(
-    { user_id: decoded?.user_id },
+    { user_id: decoded?.user_id, name: decoded.name },
     process.env.REFRESH_TOKEN_SECRET,
-    "1D"
+    "7D"
   );
   res.cookie("refreshToken", newRefreshToken, {
     httpOnly: true,
     sameSite: "strict",
-    path: '/auth/refreshToken'
+    path: '/auth/accessToken'
   });
 };

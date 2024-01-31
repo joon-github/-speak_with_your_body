@@ -47,7 +47,7 @@ router.post("/", (0, validateRequest_1.default)(LoginRequest), (req, res) => __a
         // 사용자 정보 조회
         const user = yield (0, service_1.findUserById)(id);
         if (!user) {
-            return res.status(401).json({
+            return res.status(400).json({
                 result: "error",
                 message: "아이디 또는 비밀번호가 틀렸습니다.",
             });
@@ -64,7 +64,7 @@ router.post("/", (0, validateRequest_1.default)(LoginRequest), (req, res) => __a
         }
         else {
             res
-                .status(401)
+                .status(400)
                 .json({ result: "error", message: "아이디 또는 비밀번호가 틀렸습니다." });
         }
     }

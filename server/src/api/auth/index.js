@@ -7,10 +7,10 @@ const express_1 = __importDefault(require("express"));
 const login_1 = __importDefault(require("./login")); // Adjust the path as necessary
 const signUp_1 = __importDefault(require("./signUp")); // Adjust the path as necessary
 const logout_1 = __importDefault(require("./logout"));
-const refreshToken_1 = __importDefault(require("./refreshToken"));
+const accessToken_1 = __importDefault(require("./accessToken"));
 const authRouter = express_1.default.Router();
 authRouter.use("/login", login_1.default);
 authRouter.use("/logout", logout_1.default);
 authRouter.use("/sign_up", signUp_1.default);
-authRouter.use("/refreshToken", refreshToken_1.default);
+authRouter.use("/accessToken", accessToken_1.default);
 exports.default = authRouter;

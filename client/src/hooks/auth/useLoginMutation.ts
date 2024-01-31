@@ -9,7 +9,7 @@ const useLoginMutation = () => {
     },
     {
       onSuccess: (res) => {
-        if (res.request.status === 401) return;
+        if (res.request.status === 400) return;
         navigate('/');
       },
       //실패시

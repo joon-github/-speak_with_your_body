@@ -9,7 +9,7 @@ import cookieParser from "cookie-parser";
 //router
 import authRouter from "./api/auth";
 import verifyToken from "./middlewhere/verifyToken";
-import initializeWebSocket from "./\bsocket/initializeWebSocket";
+import initializeWebSocket from "./socket/initializeWebSocket";
 
 const app: Express = express();
 const server = http.createServer(app);
@@ -30,6 +30,7 @@ app.use(cookieParser());
 app.use("/auth", authRouter);
 
 // 토큰 체크 미들웨어 적용
+
 app.use(verifyToken);
 
 app.get("/user_check", (req: Request, res: Response) => {
