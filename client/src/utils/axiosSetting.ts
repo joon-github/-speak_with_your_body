@@ -1,6 +1,6 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { message } from 'antd';
-
+type ErrorHandler = (error: AxiosError) => Promise<void> | void;
 const axiosSetting = () => {
   axios.defaults.withCredentials = true;
   axios.defaults.baseURL =
@@ -17,36 +17,43 @@ const axiosSetting = () => {
     },
   );
 
+  const handle401Error = async () => {
+    window.location.href = '/login';
+  };
+
+  const handle402Error: ErrorHandler = async (error) => {
+    try {
+      const res = await axios.post('/auth/accessToken');
+      if (res?.status === 200 && error.config) {
+        return axios.request(error.config);
+      }
+    } catch (e) {
+      window.location.href = '/login';
+      throw e;
+    }
+  };
+
+  const errorHandlers: { [key: number]: ErrorHandler } = {
+    401: handle401Error,
+    402: handle402Error,
+  };
+
   axios.interceptors.response.use(
     (response) => {
       return response;
     },
-    (error) => {
-      if (axios.isAxiosError(error)) {
-        if (error.response?.status && [401].includes(error.response.status)) {
-          console.log(error);
-          // window.location.href = '/login';
-        }
-        if (error.response?.status && [402].includes(error.response.status)) {
-          console.log(error);
-          axios.post('/auth/accessToken').then((res) => {
-            console.log(error);
-            console.log('res', res);
-            if (res?.status === 200) {
-              if (error.config) {
-                axios.request(error.config);
-              }
-            } else {
-              // window.location.href = '/login';
-            }
-          });
-        } else {
-          const result =
-            error?.response?.data.message || '서버에 문제가 생겼습니다.';
-          message.error(result);
-        }
+    async (error) => {
+      const status = error.response?.status;
+      if (axios.isAxiosError(error) && status) {
+        const handler = errorHandlers[status];
+        return handler(error);
+      } else {
+        message.error(
+          error.response.data.message || '서버에 문제가 생겼습니다.',
+        );
       }
-      return error;
+
+      return Promise.reject(error);
     },
   );
 };
