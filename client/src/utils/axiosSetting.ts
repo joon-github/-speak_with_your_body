@@ -10,11 +10,9 @@ const axiosSetting = () => {
 
   axios.interceptors.request.use(
     (config) => {
-      console.log('config', config);
       return config;
     },
     (error) => {
-      console.log('requestError', error);
       return error;
     },
   );

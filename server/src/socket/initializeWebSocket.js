@@ -12,7 +12,6 @@ const initializeWebSocket = (server) => {
             const adapter = wsServer.sockets.adapter;
             const newRoomList = [...adapter.rooms.keys()] // 모든 방 리스트에서
                 .filter((room) => !adapter.sids.has(room));
-            console.log("roomList", newRoomList);
             return newRoomList;
         }
         // 방리스트 보내기

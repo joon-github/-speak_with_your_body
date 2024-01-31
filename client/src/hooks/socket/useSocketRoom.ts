@@ -10,11 +10,6 @@ const useSockettSetting = () => {
   if (error) {
     throw error;
   }
-  useEffect(() => {
-    if (socket?.connect()) {
-      SetSocketconnected(socket?.connect().connected);
-    }
-  }, [socket]);
 
   useEffect(() => {
     if (userInfo) {
@@ -23,6 +18,7 @@ const useSockettSetting = () => {
         console.log(roomCount);
       });
       socket.on('get_room_list', (roomList) => {
+        SetSocketconnected(true);
         setRoomList(roomList);
       });
     }
