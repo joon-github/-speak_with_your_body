@@ -11,4 +11,5 @@ const authRouter = express_1.default.Router();
 authRouter.use("/login", login_1.default);
 authRouter.use("/logout", logout_1.default);
 authRouter.use("/sign_up", signUp_1.default);
+authRouter.use("/refreshToken", signUp_1.default);
 exports.default = authRouter;

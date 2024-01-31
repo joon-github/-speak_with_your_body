@@ -43,5 +43,6 @@ export const newRefreshToken = (decoded: any, res: Response) => {
   res.cookie("refreshToken", newRefreshToken, {
     httpOnly: true,
     sameSite: "strict",
+    path: '/auth/refreshToken'
   });
 };

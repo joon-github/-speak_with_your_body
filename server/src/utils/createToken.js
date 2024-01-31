@@ -28,6 +28,7 @@ const newRefreshToken = (decoded, res) => {
     res.cookie("refreshToken", newRefreshToken, {
         httpOnly: true,
         sameSite: "strict",
+        path: '/auth/refreshToken'
     });
 };
 exports.newRefreshToken = newRefreshToken;

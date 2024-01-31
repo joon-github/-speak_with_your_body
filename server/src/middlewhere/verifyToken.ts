@@ -12,6 +12,12 @@ const authFail = (res: Response) => {
   });
 }
 
+const refreshFail = (res: Response) => {
+  return res.status(402).send({
+    status: 402,
+    message: "토큰 갱신 실패.",
+  });
+}
 
 // 인증 성공시 응답 메시지를 반환합니다.
 const authSuccess = (res: Response) => {
@@ -50,7 +56,7 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
       authSuccess(res);
     } catch (refreshErr) {
       // 리프레시 토큰 검증이 실패했을 때의 처리입니다.
-      authFail(res);
+      refreshFail(res)
     }
   }
 };
