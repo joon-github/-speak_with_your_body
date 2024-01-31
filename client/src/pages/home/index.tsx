@@ -57,13 +57,13 @@ const HomePage = () => {
       <Button onClick={createRoom}>방생성</Button>
       <Button onClick={logout}>로그아웃</Button>
       <RoomList>
-        {roomList.map((room: string, index) => {
+        {roomList.map((room: string) => {
           const [roomName, roomKey] = room.split('&');
           return (
             <Room
-              key={index}
+              key={roomKey}
               onClick={joinRoom}
-              data-roomname={room}
+              data-roomname={roomName}
               data-roomkey={roomKey}
             >
               <div className="title">
