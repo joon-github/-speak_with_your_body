@@ -7,6 +7,9 @@ const initializeWebSocket = (server) => {
         },
     });
     wsServer.on("connection", (socket) => {
+        socket.onAny((event) => {
+            // console.log(event, wsServer.sockets.adapter);
+        });
         // 방리스트 조회 함수
         function getRoomList() {
             const adapter = wsServer.sockets.adapter;
@@ -17,7 +20,7 @@ const initializeWebSocket = (server) => {
         // 방리스트 보내기
         function sendRoomList() {
             const roomList = getRoomList();
-            console.log("send_room_list", roomList);
+            console.log(roomList);
             wsServer.emit("get_room_list", roomList); // 방리스트를 보내준다.
         }
         //방 인원수 조회
@@ -34,14 +37,15 @@ const initializeWebSocket = (server) => {
             }
         }
         //최초 입장시
-        socket.on("init", () => {
-            console.log("init");
+        socket.on("init", (name) => {
+            socket.name = name;
             sendRoomList();
         });
+        // 방 생성 및 입장
         socket.on("join_room", (roomName, key) => {
             const roomList = getRoomList();
             socket.join(`${roomName}&${key}`);
-            countRoom(roomName, false);
+            // countRoom(roomName, false);
             if (!roomList.includes(String(roomName))) {
                 sendRoomList();
             }
@@ -49,13 +53,21 @@ const initializeWebSocket = (server) => {
                 socket.to(roomName).emit("leave", socket.id);
             });
         });
-        socket.on("offer", (offer, roomName, peerSocketId) => {
+        // 방 입장 후 유저 정보 요청
+        socket.on("start", (roomName) => {
+            console.log("start", roomName, socket.id);
+            socket.to(roomName).emit("welcome", socket.id);
+        });
+        socket.on("offer", (offer, peerSocketId) => {
+            console.log("offer", peerSocketId);
             socket.to(peerSocketId).emit("offer", offer, socket.id);
         });
-        socket.on("answer", (answer, roomName, peerSocketId) => {
+        socket.on("answer", (answer, peerSocketId) => {
+            console.log("answer", peerSocketId);
             socket.to(peerSocketId).emit("answer", answer, socket.id);
         });
-        socket.on("ice", (ice, roomName, peerSocketId) => {
+        socket.on("ice", (ice, peerSocketId) => {
+            console.log("ice", peerSocketId);
             socket.to(peerSocketId).emit("ice", ice, socket.id);
         });
         /* 서버 퇴장시 */

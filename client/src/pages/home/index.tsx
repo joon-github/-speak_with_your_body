@@ -7,18 +7,12 @@ import useLogoutMutation from '../../hooks/auth/useLogoutMutation';
 import useRoomList from '../../hooks/socket/useRoomList';
 import uuid from 'react-uuid';
 import { useNavigate } from 'react-router-dom';
-import useUserCheckQuery from '../../hooks/auth/useUserCheckQuery';
 import { useSocket } from '../../components/provider/SocketProvider';
+import { Link } from 'react-router-dom';
 
 const HomePage = () => {
   const socket = useSocket();
   const navigate = useNavigate();
-
-  const { data: userInfo, error: userCheckError } = useUserCheckQuery();
-  if (userCheckError) {
-    throw userCheckError;
-  }
-  console.log(userInfo);
 
   const { mutate: logoutMutation, error } = useLogoutMutation();
   const { isLoading: socketConnected, roomList } = useRoomList();
@@ -28,12 +22,7 @@ const HomePage = () => {
   const createRoom = () => {
     const roomKey = uuid();
     socket?.emit('join_room', joinRoomInputValue, roomKey);
-  };
-
-  const joinRoom = (event: React.MouseEvent<HTMLDivElement>) => {
-    const roomName = event.currentTarget.getAttribute('data-roomname');
-    const roomKey = event.currentTarget.getAttribute('data-roomkey');
-    navigate(`/room/${roomKey}`, { state: roomName });
+    navigate(`/room/${joinRoomInputValue}&${roomKey}`);
   };
 
   const logout = async () => {
@@ -58,19 +47,16 @@ const HomePage = () => {
       <Button onClick={logout}>로그아웃</Button>
       <RoomList>
         {roomList.map((room: string) => {
-          const [roomName, roomKey] = room.split('&');
+          const [roomName] = room.split('&');
           return (
-            <Room
-              key={roomKey}
-              onClick={joinRoom}
-              data-roomname={roomName}
-              data-roomkey={roomKey}
-            >
-              <div className="title">
-                <span className="roomNumber">047</span>
-                <h3>{roomName}</h3>
-              </div>
-            </Room>
+            <Link to={`/room/${room}`} key={room}>
+              <Room>
+                <div className="title">
+                  <span className="roomNumber">047</span>
+                  <h3>{roomName}</h3>
+                </div>
+              </Room>
+            </Link>
           );
         })}
       </RoomList>

@@ -44,8 +44,8 @@ const axiosSetting = () => {
     },
     async (error) => {
       const status = error.response?.status;
-      if (axios.isAxiosError(error) && status) {
-        const handler = errorHandlers[status];
+      const handler = errorHandlers[status];
+      if (axios.isAxiosError(error) && handler) {
         return handler(error);
       } else {
         message.error(
