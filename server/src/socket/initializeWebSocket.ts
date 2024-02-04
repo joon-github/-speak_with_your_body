@@ -52,12 +52,13 @@ const initializeWebSocket = (server: Server) => {
       if (!roomList.includes(String(roomName))) {
         sendRoomList();
       }
-      socket.on("disconnect", () => {
-        socket.to(roomName).emit("leave", socket.id);
-      });
+      // socket.on("disconnect", () => {
+      //   socket.to(roomName).emit("leave", socket.id);
+      // });
     });
     // 방 입장 후 유저 정보 요청
     socket.on("start", (roomName) => {
+      console.log(getRoomList());
       console.log("start", roomName, socket.id);
       socket.to(roomName).emit("welcome", socket.id);
     });

@@ -20,14 +20,14 @@ const queryClient = new QueryClient({
   },
 });
 root.render(
-  <React.StrictMode>
+  <>
     <GlobalStyles />
     <QueryClientProvider client={queryClient}>
       <RecoilRoot>
         <App />
       </RecoilRoot>
     </QueryClientProvider>
-  </React.StrictMode>,
+  </>,
 );
 
 // If you want to start measuring performance in your app, pass a function

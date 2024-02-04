@@ -1,21 +1,17 @@
 import { useState } from 'react';
-
 import { Button, Input, Spin } from 'antd';
 import styled from 'styled-components';
-
 import useLogoutMutation from '../../hooks/auth/useLogoutMutation';
 import useRoomList from '../../hooks/socket/useRoomList';
 import uuid from 'react-uuid';
 import { useNavigate } from 'react-router-dom';
-import { useSocket } from '../../components/provider/SocketProvider';
 import { Link } from 'react-router-dom';
-
-const HomePage = () => {
-  const socket = useSocket();
+import { Socket } from 'socket.io-client';
+const HomePage = ({ socket }: { socket: Socket }) => {
   const navigate = useNavigate();
 
   const { mutate: logoutMutation, error } = useLogoutMutation();
-  const { isLoading: socketConnected, roomList } = useRoomList();
+  const { isLoading: socketConnected, roomList } = useRoomList(socket);
 
   const [joinRoomInputValue, setJoinRoomInputValue] = useState('');
 

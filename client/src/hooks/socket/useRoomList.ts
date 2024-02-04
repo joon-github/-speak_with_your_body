@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useSocket } from '../../components/provider/SocketProvider';
 import useUserCheckQuery from '../auth/useUserCheckQuery';
-const useRoomList = () => {
-  const socket = useSocket();
+import { Socket } from 'socket.io-client';
+const useRoomList = (socket: Socket) => {
   const [socketConnected, SetSocketconnected] = useState(false);
   const [roomList, setRoomList] = useState([]);
   const { data: userInfo } = useUserCheckQuery();
@@ -14,7 +13,6 @@ const useRoomList = () => {
       });
       socket.on('get_room_list', (roomList) => {
         SetSocketconnected(true);
-        console.log(roomList);
         setRoomList(roomList);
       });
     }
