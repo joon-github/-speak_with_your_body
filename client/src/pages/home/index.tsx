@@ -28,6 +28,7 @@ const HomePage = ({ socket }: { socket: Socket }) => {
       console.log(e);
     }
   };
+
   if (error) {
     throw error;
   }
@@ -45,7 +46,13 @@ const HomePage = ({ socket }: { socket: Socket }) => {
         {roomList.map((room: string) => {
           const [roomName] = room.split('&');
           return (
-            <Link to={`/room/${room}`} key={room}>
+            <Link
+              to={`/room/${room}`}
+              key={room}
+              onClick={() => {
+                socket?.emit('join_room', room);
+              }}
+            >
               <Room>
                 <div className="title">
                   <span className="roomNumber">047</span>
