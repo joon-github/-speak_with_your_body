@@ -11,6 +11,6 @@ Speak with Your Body는 영상 통화를 통해 제스처로 소통하며 제시
   
 ### 기술 스택
 
-- 프론트엔드: React, TypeScript, WebRTC
+- 프론트엔드: React, React query, Socket.io, WebRTC
 - 백엔드: Node.js, Express, TypeScript, Socket.io
 - 데이터베이스: mySql
